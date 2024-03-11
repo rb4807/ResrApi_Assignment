@@ -27,7 +27,7 @@ class Recipe(models.Model):
     short_description = models.CharField(max_length=150, null=True)
     recipe = models.CharField(max_length=100)
     image = models.ImageField(upload_to='dish') 
-    ingredients = models.DateTimeField(auto_now=True)
+    ingredients = models.CharField(max_length=250)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     meal_type = models.CharField(max_length=50, choices=TYPE_CHOICES)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES)

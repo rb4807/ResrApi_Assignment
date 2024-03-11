@@ -1,5 +1,5 @@
-from rest_framework import filters
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, filters, status
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Recipe
@@ -11,14 +11,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['category', 'meal_type']
     search_fields = ['dish', 'short_description', 'recipe']
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+       
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
+        
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -26,11 +29,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
+       
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self):
+        
         queryset = Recipe.objects.all()
         category = self.request.query_params.get('category', None)
         meal_type = self.request.query_params.get('meal_type', None)
